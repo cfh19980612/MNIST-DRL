@@ -211,7 +211,7 @@ class cnn(nn.Module):
         correct = 0
         for data, target in self.testloader:
             indx_target = target.clone()
-            if args.cuda:
+            if self.device == 'cuda':
                 data, target = data.cuda(), target.cuda()
             data, target = Variable(data, volatile=True), Variable(target)
             output = Model(data)
