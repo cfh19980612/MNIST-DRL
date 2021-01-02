@@ -221,7 +221,7 @@ class cnn(nn.Module):
             correct += pred.cpu().eq(indx_target).sum()
 
         test_loss = test_loss / len(self.testloader) # average over number of mini-batch
-        accuracy = 100. * correct / len(self.testloader.dataset)
+        accuracy = float(correct / len(self.testloader.dataset))
         if self.device == 'cuda':
             Model.cpu()
         return accuracy
