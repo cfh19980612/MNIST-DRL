@@ -74,7 +74,7 @@ class cnn(nn.Module):
             return args, trainloader, testloader
         elif self.dataset == 'MNIST':
             parser = argparse.ArgumentParser(description='PyTorch MNIST Training')
-            parser.add_argument('--lr', default=0.1, type=float, help='learning rate')
+            parser.add_argument('--lr', default=0.01, type=float, help='learning rate')
             parser.add_argument('--resume', '-r', action='store_true',
                                 help='resume from checkpoint')
             args = parser.parse_args()
@@ -206,17 +206,21 @@ class cnn(nn.Module):
         if self.device == 'cuda':
             Model = torch.nn.DataParallel(Model)
 
-        for batch_idx, (inputs, targets) in enumerate(self.testloader):
-            test_output = Model(inputs)
-            pred_y = torch.max(test_output, 1)[1].data.cpu().numpy()
-            accuracy = float((pred_y == targets.data.numpy()).astype(int).sum()) / float(targets.size(0))
-            # accuracy = Test(epoch,global_model)
-#         print ('\n')
-#         print('Epoch: ', epoch, '| test accuracy: %.2f' % accuracy)
-        # free gpu
-        if self.device == 'cuda':
-            Model.cpu()
-            # torch.cuda.empty_cache()
+        model.eval()
+        test_loss = 0
+        correct = 0
+        for data, target in test_loader:
+            indx_target = target.clone()
+            if args.cuda:
+                data, target = data.cuda(), target.cuda()
+            data, target = Variable(data, volatile=True), Variable(target)
+            output = model(data)
+            test_loss += F.cross_entropy(output, target).data
+            pred = output.data.max(1)[1]  # get the index of the max log-probability
+            correct += pred.cpu().eq(indx_target).sum()
+
+        test_loss = test_loss / len(test_loader) # average over number of mini-batch
+        accuracy = 100. * correct / len(test_loader.dataset)
         return accuracy
 
     # local_aggregate
