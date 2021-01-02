@@ -7,7 +7,7 @@ model_urls = {
 }
 
 class MNISTNet(nn.Module):
-    def __init__(self, input_dims, n_hiddens, n_class):
+    def __init__(self, input_dims = 784, n_hiddens = [256,256], n_class = 10):
         super(MNISTNet, self).__init__()
         assert isinstance(input_dims, int), 'Please provide int for input_dims'
         self.input_dims = input_dims
