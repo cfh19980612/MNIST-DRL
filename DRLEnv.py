@@ -89,7 +89,7 @@ class FedEnv(gym.Env):
         S_local = np.array(S_local).flatten()
         
         # convert to [num_samples, num_features]
-        S = np.reshape(S_local,(self.client,1199882))
+        S = np.reshape(S_local,(self.client,269322))
         
         # pca
         state = self.pca.fit_transform(S)
@@ -122,7 +122,7 @@ class FedEnv(gym.Env):
         S_local = np.array(S_local).flatten()
         
         # convert to [num_samples, num_features]
-        S = np.reshape(S_local,(self.client,1199882))
+        S = np.reshape(S_local,(self.client,269322))
         
         # pca training ?
         if Tag:
