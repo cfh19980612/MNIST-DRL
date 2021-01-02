@@ -47,12 +47,13 @@ if __name__ == '__main__':
             agent.step(state, action, reward, next_state)
             state = next_state
             score += reward
-                    
+            print('accuracy:',accuracy)
+            pbar.set_description("Epoch: %d Accuracy: %.3f Reward: %.3f" %(i, accuracy,reward))
                     
             # end?
             if accuracy >= 0.90:
                 break
-            pbar.set_description("Epoch: %d Accuracy: %.3f Reward: %.3f" %(i, accuracy,reward))
+            
         
         # save accuracy
         env.save_acc(X,Y)
