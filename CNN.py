@@ -209,7 +209,7 @@ class cnn(nn.Module):
         Model.eval()
         test_loss = 0
         correct = 0
-        for data, target in testloader:
+        for data, target in self.testloader:
             indx_target = target.clone()
             if args.cuda:
                 data, target = data.cuda(), target.cuda()
@@ -219,8 +219,8 @@ class cnn(nn.Module):
             pred = output.data.max(1)[1]  # get the index of the max log-probability
             correct += pred.cpu().eq(indx_target).sum()
 
-        test_loss = test_loss / len(testloader) # average over number of mini-batch
-        accuracy = 100. * correct / len(testloader.dataset)
+        test_loss = test_loss / len(self.testloader) # average over number of mini-batch
+        accuracy = 100. * correct / len(self.testloader.dataset)
         return accuracy
 
     # local_aggregate
