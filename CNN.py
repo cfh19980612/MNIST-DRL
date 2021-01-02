@@ -214,7 +214,8 @@ class cnn(nn.Module):
             indx_target = target.clone()
             if self.device == 'cuda':
                 data, target = data.cuda(), target.cuda()
-            data, target = Variable(data, volatile=True), Variable(target)
+#             with torch.no_grad(data,target):
+                
             output = Model(data)
             test_loss += F.cross_entropy(output, target).data
             pred = output.data.max(1)[1]  # get the index of the max log-probability
