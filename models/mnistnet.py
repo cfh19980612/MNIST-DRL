@@ -6,9 +6,9 @@ model_urls = {
     'mnist': 'http://ml.cs.tsinghua.edu.cn/~chenxi/pytorch-models/mnist-b07bb66b.pth'
 }
 
-class MLP(nn.Module):
+class MNISTNet(nn.Module):
     def __init__(self, input_dims = 784, n_hiddens = [256,256], n_class = 10):
-        super(MLP, self).__init__()
+        super(MNISTNet, self).__init__()
         assert isinstance(input_dims, int), 'Please provide int for input_dims'
         self.input_dims = input_dims
         current_dims = input_dims
