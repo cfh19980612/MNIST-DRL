@@ -222,6 +222,8 @@ class cnn(nn.Module):
 
         test_loss = test_loss / len(self.testloader) # average over number of mini-batch
         accuracy = 100. * correct / len(self.testloader.dataset)
+        if self.device == 'cuda':
+            Model.cpu()
         return accuracy
 
     # local_aggregate
