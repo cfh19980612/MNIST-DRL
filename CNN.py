@@ -4,6 +4,7 @@ os.environ['CUDA_ENABLE_DEVICES'] = '0'
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.autograd import Variable
 import torch.backends.cudnn as cudnn
 import torchvision
 import torchvision.transforms as transforms
