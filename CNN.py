@@ -206,21 +206,21 @@ class cnn(nn.Module):
         if self.device == 'cuda':
             Model = torch.nn.DataParallel(Model)
 
-        model.eval()
+        Model.eval()
         test_loss = 0
         correct = 0
-        for data, target in test_loader:
+        for data, target in testloader:
             indx_target = target.clone()
             if args.cuda:
                 data, target = data.cuda(), target.cuda()
             data, target = Variable(data, volatile=True), Variable(target)
-            output = model(data)
+            output = Model(data)
             test_loss += F.cross_entropy(output, target).data
             pred = output.data.max(1)[1]  # get the index of the max log-probability
             correct += pred.cpu().eq(indx_target).sum()
 
-        test_loss = test_loss / len(test_loader) # average over number of mini-batch
-        accuracy = 100. * correct / len(test_loader.dataset)
+        test_loss = test_loss / len(testloader) # average over number of mini-batch
+        accuracy = 100. * correct / len(testloader.dataset)
         return accuracy
 
     # local_aggregate
