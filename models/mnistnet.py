@@ -1,13 +1,15 @@
-import torch
 import torch.nn as nn
-import torch.nn.functional as F
+from collections import OrderedDict
+import torch.utils.model_zoo as model_zoo
+from utee import misc
+print = misc.logger.info
 
 model_urls = {
     'mnist': 'http://ml.cs.tsinghua.edu.cn/~chenxi/pytorch-models/mnist-b07bb66b.pth'
 }
 
 class MNISTNet(nn.Module):
-    def __init__(self, input_dims = 784, n_hiddens = [256,256], n_class = 10):
+    def __init__(self, input_dims, n_hiddens, n_class):
         super(MNISTNet, self).__init__()
         assert isinstance(input_dims, int), 'Please provide int for input_dims'
         self.input_dims = input_dims
