@@ -240,10 +240,12 @@ class cnn(nn.Module):
         for key, value in P.items():
             m = 0
             for j in range (Client):
-                if Imp[i,j] > 0:
-                    m = m + Imp[i,j]
-                P[key] = P[key] + (Imp[i,j]/Imp[i].sum())*Q[j][key]
-            # P[key] = torch.true_divide(P[key],m+1)
+                if i != j:
+                    if Imp[i,j] > 0:
+#                     P[key] = P[key] + (Imp[i,j]/Imp[i].sum())*Q[j][key]
+                        P[key] = P[key] + Q[j][key]
+                        m += 1
+            P[key] = torch.true_divide(P[key],m+1)
             
         for j in range (Client):
             # if self.G.has_edge(i,j):
