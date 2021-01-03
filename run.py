@@ -50,7 +50,7 @@ if __name__ == '__main__':
             pbar.set_description("Epoch: %d Accuracy: %.3f Reward: %.3f" %(i, accuracy,reward))
                     
             # end?
-            if accuracy >= 0.985:
+            if accuracy >= 0.983:
                 break
             
         
