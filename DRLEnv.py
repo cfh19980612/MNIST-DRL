@@ -95,7 +95,7 @@ class FedEnv(gym.Env):
         state = self.pca.fit_transform(S)
         state = state.flatten()
         # self.toCsv(times,score)
-        reward = pow(128, accuracy-0.983)-1
+        reward = 5*pow(128, accuracy-0.983)-5
         
         return t, accuracy, state, reward
 
