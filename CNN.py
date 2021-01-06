@@ -16,7 +16,7 @@ import pandas as pd
 import numpy as np
 from utils import progress_bar
 from models import *
-
+from multiprocessing import Pool
 
 
 
@@ -139,7 +139,7 @@ class cnn(nn.Module):
         if self.device == 'cuda':
             self.Model[i] = torch.nn.DataParallel(self.Model[i])
             cudnn.benchmark = True
-        self.Model[client].train()
+        self.Model[i].train()
         
         # training
         train_loss = 0
@@ -148,11 +148,11 @@ class cnn(nn.Module):
         Loss = 0
         for batch_idx, (inputs, targets) in enumerate(self.trainloader):
             inputs, targets = inputs.to(self.device), targets.to(self.device)
-            self.Optimizer[client].zero_grad()
-            outputs = self.Model[client](inputs)
+            self.Optimizer[i].zero_grad()
+            outputs = self.Model[i](inputs)
             Loss = criterion(outputs, targets)
             Loss.backward()
-            self.Optimizer[client].step()
+            self.Optimizer[i].step()
 
             train_loss += Loss.item()
             _, predicted = outputs.max(1)
