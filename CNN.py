@@ -165,6 +165,7 @@ class cnn(nn.Module):
     # CNN training process
     def CNN_train(self, i, criterion):
         print ('Process ', i)
+        
         self.Model[i] = self.Model[i].to(self.device)
         
         # gpu ?
@@ -213,7 +214,8 @@ class cnn(nn.Module):
         # multi processes
         p_pool = Pool(Client)
         for i in range(Client):
-            p_pool.apply_async(func=self.CNN_train, args=(i, criterion))
+#             p_pool.apply_async(func=self.CNN_train, args=(i, criterion))
+            p_pool.map(func=self.CNN_train, args=(i, criterion)
         p_pool.close()
         p_pool.join()
 
