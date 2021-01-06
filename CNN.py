@@ -16,8 +16,8 @@ import pandas as pd
 import numpy as np
 from utils import progress_bar
 from models import *
-# from multiprocessing import Pool
-from pathos.pools import ProcessPool as Pool
+from multiprocessing import Pool
+
 
 def CNN_train(i, criterion, Model, Optimizer, device, trainloader):
     # print ('Process ', i)
