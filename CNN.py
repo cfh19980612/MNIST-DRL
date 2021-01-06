@@ -162,7 +162,7 @@ class cnn(nn.Module):
         if self.device == 'cuda':
             self.Model[i].cpu()
         acc = self.CNN_test(self.Model[i])
-        print("accuracy ",acc)
+        print("accuracy ",i)
 
     # multiple processes to train CNN models
     def CNN_processes(self, epoch, Client):
