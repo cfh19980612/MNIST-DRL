@@ -21,7 +21,7 @@ from multiprocessing import Pool
 def CNN_train(i, criterion, Model, Optimizer, device, trainloader):
     # print ('Process ', i)
     Model = Model.to(device)
-
+    print ('Process ', i)
     # gpu ?
     if device == 'cuda':
         Model = torch.nn.DataParallel(Model)
