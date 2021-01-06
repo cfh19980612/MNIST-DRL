@@ -9,8 +9,8 @@ from collections import deque
 if __name__ == '__main__':
     print (torch.cuda.is_available())
     epoches, print_every = 200, 100
-    env = FedEnv(Client = 10, k = 2)  # env
-    agent = Agent(state_size=100, action_size=100, random_seed=2)  # agent
+    env = FedEnv(Client = 3, k = 2)  # env
+    agent = Agent(state_size=9, action_size=9, random_seed=2)  # agent
     scores_deque = deque(maxlen=print_every)
     scores = []
     episode = []
