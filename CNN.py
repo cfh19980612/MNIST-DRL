@@ -214,7 +214,7 @@ class cnn(nn.Module):
         # multi processes
         processes = []
         for rank in range(Client):
-            p = mp.Process(target=CNN_train, args=(i, criterion))
+            p = mp.Process(target=self.CNN_train, args=(i, criterion))
             p.start()
             processes.append(p)
         for p in processes:
