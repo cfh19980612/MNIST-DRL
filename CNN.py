@@ -19,6 +19,11 @@ import numpy as np
 from utils import progress_bar
 from models import *
 
+try:
+     set_start_method('spawn')
+except RuntimeError:
+    pass
+
 
 # def CNN_train(i, criterion, Model, Optimizer, device, trainloader):
 #     # print ('Process ', i)
