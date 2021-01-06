@@ -142,6 +142,8 @@ class cnn(nn.Module):
             cudnn.benchmark = True
         self.Model[i].train()
         
+        print ('Process ', i)
+        
         # training
         train_loss = 0
         correct = 0
