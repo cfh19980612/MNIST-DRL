@@ -186,8 +186,6 @@ class cnn(nn.Module):
         Loss = 0
         for batch_idx, (inputs, targets) in enumerate(self.trainloader):
             inputs, targets = inputs.to(self.device), targets.to(self.device)
-            inputs.share_memory()
-            target.share_memory()
             self.Optimizer[i].zero_grad()
             outputs = self.Model[i](inputs)
             Loss = criterion(outputs, targets)
