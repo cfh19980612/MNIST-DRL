@@ -16,9 +16,8 @@ import pandas as pd
 import numpy as np
 from utils import progress_bar
 from models import *
-from multiprocessing import Pool
-
-p_pool = Pool(10)
+# from multiprocessing import Pool
+from pathos.pools import ProcessPool as Pool
 
 def CNN_train(i, criterion, Model, Optimizer, device, trainloader):
     # print ('Process ', i)
@@ -212,6 +211,7 @@ class cnn(nn.Module):
      
         
         # multi processes
+        p_pool = Pool(Client)
         for i in range(Client):
             p_pool.apply_async(func=CNN_train, args=(i, criterion, self.Model[i], self.Optimizer[i], self.device, self.trainloader))
         p_pool.close()
