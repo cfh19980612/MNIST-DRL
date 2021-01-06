@@ -6,6 +6,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 import torch.backends.cudnn as cudnn
+import torch.multiprocessing as mp
 import torchvision
 import torchvision.transforms as transforms
 import networkx as nx
@@ -16,7 +17,6 @@ import pandas as pd
 import numpy as np
 from utils import progress_bar
 from models import *
-from multiprocessing import Pool
 
 
 # def CNN_train(i, criterion, Model, Optimizer, device, trainloader):
@@ -212,12 +212,13 @@ class cnn(nn.Module):
      
         
         # multi processes
-        p_pool = Pool(Client)
-        for i in range(Client):
-#             p_pool.apply_async(func=self.CNN_train, args=(i, criterion))
-            p_pool.map(self.CNN_train(i, criterion))
-        p_pool.close()
-        p_pool.join()
+        processes = []
+        for rank in range(Client):
+            p = mp.Process(target=CNN_train, args=(i, criterion))
+            p.start()
+            processes.append(p)
+        for p in processes:
+            p.join()
 
 #         # each silo owns a complete dataset
 #         for client in range (Client):
