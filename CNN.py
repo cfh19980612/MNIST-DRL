@@ -215,7 +215,7 @@ class cnn(nn.Module):
         p_pool = Pool(Client)
         for i in range(Client):
 #             p_pool.apply_async(func=self.CNN_train, args=(i, criterion))
-            p_pool.map(func=self.CNN_train, args=(i, criterion))
+            p_pool.map(self.CNN_train(i, criterion))
         p_pool.close()
         p_pool.join()
 
