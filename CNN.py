@@ -216,8 +216,7 @@ class cnn(nn.Module):
         
         # multi processes
         
-        for i in range (Client):
-            self.Model[i].share_memory()
+        self.trainloader.share_memory()
         processes = []
         for i in range(Client):
             p = mp.Process(target=self.CNN_train, args=(i, criterion))
