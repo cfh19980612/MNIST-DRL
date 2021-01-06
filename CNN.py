@@ -172,7 +172,6 @@ class cnn(nn.Module):
     def CNN_train(self, i, criterion):
         
         self.Model[i] = self.Model[i].to(self.device)
-        print (i)
         # gpu ?
         if self.device == 'cuda':
             self.Model[i] = torch.nn.DataParallel(self.Model[i])
