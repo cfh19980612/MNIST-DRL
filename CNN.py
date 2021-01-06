@@ -213,7 +213,7 @@ class cnn(nn.Module):
         # multi processes
         p_pool = Pool(Client)
         for i in range(Client):
-            p_pool.apply_async(func=CNN_train, args=(i, criterion, self.Model[i], self.Optimizer[i], self.device, self.trainloader))
+            # p_pool.apply_async(func=CNN_train, args=(i, criterion, self.Model[i], self.Optimizer[i], self.device, self.trainloader))
             p_pool.map(func=CNN_train, args=(i, criterion, self.Model[i], self.Optimizer[i], self.device, self.trainloader))
         p_pool.close()
         p_pool.join()
