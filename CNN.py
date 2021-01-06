@@ -131,11 +131,11 @@ class cnn(nn.Module):
                 global_model = MobileNet()
                 return self.Model, global_model
             
-#     # CNN training process
+    # CNN training process
     def CNN_train(self, i, criterion):
         # print ('Process ', i)
         self.Model[i] = self.Model[i].to(self.device)
-        print ('Process ', i)
+        
         # gpu ?
         if self.device == 'cuda':
             self.Model[i] = torch.nn.DataParallel(self.Model[i])
@@ -179,12 +179,14 @@ class cnn(nn.Module):
         P = [None for i in range (Client)]
      
         
-        # Process pool
-        p_pool = Pool(Client)
-        for i in range (Client):
-            p_pool.apply_async(func=self.CNN_train, args=(i, criterion))
-        p_pool.close()
-        p_pool.join()
+        # multi processes
+        p_list = []
+        for i in range(Client):
+            process = Process(target=self.CNN_train(i, criterion))
+            process.start()
+            p_list.append(process)
+        for process in p_list:
+            process.join()
         
 #         # each silo owns a complete dataset
 #         for client in range (Client):
