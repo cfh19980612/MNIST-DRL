@@ -133,7 +133,7 @@ class cnn(nn.Module):
             
 #     # CNN training process
     def CNN_train(self, i, criterion):
-        print ('Process ', i)
+        # print ('Process ', i)
         self.Model[i] = self.Model[i].to(self.device)
         
         # gpu ?
@@ -161,6 +161,8 @@ class cnn(nn.Module):
             correct += predicted.eq(targets).sum().item()
         if self.device == 'cuda':
             self.Model[i].cpu()
+        acc = self.CNN_test(self.Model[i])
+        print("accuracy ",acc)
 
     # multiple processes to train CNN models
     def CNN_processes(self, epoch, Client):
@@ -239,7 +241,7 @@ class cnn(nn.Module):
         return P
 
     # CNN_test
-    def CNN_test(self, epoch, Model):
+    def CNN_test(self, Model):
         # cpu ? gpu
         Model = Model.to(self.device)
         if self.device == 'cuda':
