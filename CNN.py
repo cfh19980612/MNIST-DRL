@@ -16,9 +16,39 @@ import pandas as pd
 import numpy as np
 from utils import progress_bar
 from models import *
-from multiprocessing import Process
+from multiprocessing import Pool
+
+def CNN_train(i, criterion, Model, Optimizer, device, trainloader):
+    # print ('Process ', i)
+    Model = Model.to(device)
+
+    # gpu ?
+    if device == 'cuda':
+        Model = torch.nn.DataParallel(Model)
+        cudnn.benchmark = True
+    Model.train()
 
 
+    # training
+    train_loss = 0
+    correct = 0
+    total = 0
+    Loss = 0
+    for batch_idx, (inputs, targets) in enumerate(trainloader):
+        inputs, targets = inputs.to(device), targets.to(device)
+        Optimizer.zero_grad()
+        outputs = Model(inputs)
+        Loss = criterion(outputs, targets)
+        Loss.backward()
+        Optimizer.step()
+
+        train_loss += Loss.item()
+        _, predicted = outputs.max(1)
+        total += targets.size(0)
+        correct += predicted.eq(targets).sum().item()
+    if device == 'cuda':
+        Model.cpu()
+    print("accuracy ",i)
 
 class cnn(nn.Module):
     def __init__(self, Client, Dataset, Net):
@@ -132,38 +162,38 @@ class cnn(nn.Module):
                 return self.Model, global_model
             
     # CNN training process
-    def CNN_train(self, i, criterion):
-        # print ('Process ', i)
-        self.Model[i] = self.Model[i].to(self.device)
+#     def CNN_train(self, i, criterion):
+#         # print ('Process ', i)
+#         self.Model[i] = self.Model[i].to(self.device)
         
-        # gpu ?
-        if self.device == 'cuda':
-            self.Model[i] = torch.nn.DataParallel(self.Model[i])
-            cudnn.benchmark = True
-        self.Model[i].train()
+#         # gpu ?
+#         if self.device == 'cuda':
+#             self.Model[i] = torch.nn.DataParallel(self.Model[i])
+#             cudnn.benchmark = True
+#         self.Model[i].train()
         
         
-        # training
-        train_loss = 0
-        correct = 0
-        total = 0
-        Loss = 0
-        for batch_idx, (inputs, targets) in enumerate(self.trainloader):
-            inputs, targets = inputs.to(self.device), targets.to(self.device)
-            self.Optimizer[i].zero_grad()
-            outputs = self.Model[i](inputs)
-            Loss = criterion(outputs, targets)
-            Loss.backward()
-            self.Optimizer[i].step()
+#         # training
+#         train_loss = 0
+#         correct = 0
+#         total = 0
+#         Loss = 0
+#         for batch_idx, (inputs, targets) in enumerate(self.trainloader):
+#             inputs, targets = inputs.to(self.device), targets.to(self.device)
+#             self.Optimizer[i].zero_grad()
+#             outputs = self.Model[i](inputs)
+#             Loss = criterion(outputs, targets)
+#             Loss.backward()
+#             self.Optimizer[i].step()
 
-            train_loss += Loss.item()
-            _, predicted = outputs.max(1)
-            total += targets.size(0)
-            correct += predicted.eq(targets).sum().item()
-        if self.device == 'cuda':
-            self.Model[i].cpu()
-        acc = self.CNN_test(self.Model[i])
-        print("accuracy ",i)
+#             train_loss += Loss.item()
+#             _, predicted = outputs.max(1)
+#             total += targets.size(0)
+#             correct += predicted.eq(targets).sum().item()
+#         if self.device == 'cuda':
+#             self.Model[i].cpu()
+#         acc = self.CNN_test(self.Model[i])
+#         print("accuracy ",i)
 
     # multiple processes to train CNN models
     def CNN_processes(self, epoch, Client):
@@ -180,14 +210,12 @@ class cnn(nn.Module):
      
         
         # multi processes
-        p_list = []
+        p_pool = Pool(Client)
         for i in range(Client):
-            proc = Process(target=self.CNN_train(i, criterion))
-            proc.start()
-            p_list.append(proc)
-        for proc in p_list:
-            proc.join()
-        
+            p_pool.apply_async(func=CNN_train, args=(i, criterion, self.Model[i], self.Optimizer[i], self.device, self.trainloader))
+        p_pool.close()
+        p_pool.join()
+
 #         # each silo owns a complete dataset
 #         for client in range (Client):
 #             self.Model[client].train()
