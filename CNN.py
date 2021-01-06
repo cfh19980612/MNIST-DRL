@@ -2,12 +2,12 @@ import os
 os.environ['CUDA_ENABLE_DEVICES'] = '0' 
 
 import torch
-torch.multiprocessing.set_start_method('spawn')
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 import torch.backends.cudnn as cudnn
 import torch.multiprocessing as mp
+from torch.multiprocessing import Process, set_start_method
 import torchvision
 import torchvision.transforms as transforms
 import networkx as nx
@@ -214,7 +214,7 @@ class cnn(nn.Module):
         
         # multi processes
         try:
-            torch.multiprocessing.set_start_method('fork',force=True)
+             set_start_method('spawn')
         except RuntimeError:
             pass
         processes = []
