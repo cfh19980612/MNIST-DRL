@@ -214,6 +214,10 @@ class cnn(nn.Module):
      
         
         # multi processes
+        try:
+            torch.multiprocessing.set_start_method('fork',force=True)
+        except RuntimeError:
+            pass
         processes = []
         for i in range(Client):
             p = mp.Process(target=self.CNN_train, args=(i, criterion))
