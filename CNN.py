@@ -18,6 +18,8 @@ from utils import progress_bar
 from models import *
 from multiprocessing import Pool
 
+p_pool = Pool(10)
+
 def CNN_train(i, criterion, Model, Optimizer, device, trainloader):
     # print ('Process ', i)
     Model = Model.to(device)
@@ -210,7 +212,6 @@ class cnn(nn.Module):
      
         
         # multi processes
-        p_pool = Pool(Client)
         for i in range(Client):
             p_pool.apply_async(func=CNN_train, args=(i, criterion, self.Model[i], self.Optimizer[i], self.device, self.trainloader))
         p_pool.close()
