@@ -213,10 +213,9 @@ class cnn(nn.Module):
      
         
         # multi processes
-        try:
-             set_start_method('spawn')
-        except RuntimeError:
-            pass
+        
+        for i in range (Client):
+            self.Model[i].share_memory()
         processes = []
         for i in range(Client):
             p = mp.Process(target=self.CNN_train, args=(i, criterion))
