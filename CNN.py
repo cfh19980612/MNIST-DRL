@@ -25,37 +25,36 @@ except RuntimeError:
     pass
 
 
-# def CNN_train(i, criterion, Model, Optimizer, device, trainloader):
-#     # print ('Process ', i)
-#     Model = Model.to(device)
-#     print ('Process ', i)
-#     # gpu ?
-#     if device == 'cuda':
-#         Model = torch.nn.DataParallel(Model)
-#         cudnn.benchmark = True
-#     Model.train()
+def CNN_train(i, criterion, Model, Optimizer, device, trainloader):
+    # print ('Process ', i)
+    Model = Model.to(device)
+    # gpu ?
+    if device == 'cuda':
+        Model = torch.nn.DataParallel(Model)
+        cudnn.benchmark = True
+    Model.train()
 
 
-#     # training
-#     train_loss = 0
-#     correct = 0
-#     total = 0
-#     Loss = 0
-#     for batch_idx, (inputs, targets) in enumerate(trainloader):
-#         inputs, targets = inputs.to(device), targets.to(device)
-#         Optimizer.zero_grad()
-#         outputs = Model(inputs)
-#         Loss = criterion(outputs, targets)
-#         Loss.backward()
-#         Optimizer.step()
+    # training
+    train_loss = 0
+    correct = 0
+    total = 0
+    Loss = 0
+    for batch_idx, (inputs, targets) in enumerate(trainloader):
+        inputs, targets = inputs.to(device), targets.to(device)
+        Optimizer.zero_grad()
+        outputs = Model(inputs)
+        Loss = criterion(outputs, targets)
+        Loss.backward()
+        Optimizer.step()
 
-#         train_loss += Loss.item()
-#         _, predicted = outputs.max(1)
-#         total += targets.size(0)
-#         correct += predicted.eq(targets).sum().item()
-#     if device == 'cuda':
-#         Model.cpu()
-#     print("accuracy ",i)
+        train_loss += Loss.item()
+        _, predicted = outputs.max(1)
+        total += targets.size(0)
+        correct += predicted.eq(targets).sum().item()
+    if device == 'cuda':
+        Model.cpu()
+    print("accuracy ",i)
 
 class cnn(nn.Module):
     def __init__(self, Client, Dataset, Net):
@@ -169,35 +168,35 @@ class cnn(nn.Module):
                 return self.Model, global_model
             
     # CNN training process
-    def CNN_train(self, i, criterion):
+#     def CNN_train(self, i, criterion):
         
-        self.Model[i] = self.Model[i].to(self.device)
-        # gpu ?
-        if self.device == 'cuda':
-            self.Model[i] = torch.nn.DataParallel(self.Model[i])
-            cudnn.benchmark = True
-        self.Model[i].train()
+#         self.Model[i] = self.Model[i].to(self.device)
+#         # gpu ?
+#         if self.device == 'cuda':
+#             self.Model[i] = torch.nn.DataParallel(self.Model[i])
+#             cudnn.benchmark = True
+#         self.Model[i].train()
         
         
-        # training
-        train_loss = 0
-        correct = 0
-        total = 0
-        Loss = 0
-        for batch_idx, (inputs, targets) in enumerate(self.trainloader):
-            inputs, targets = inputs.to(self.device), targets.to(self.device)
-            self.Optimizer[i].zero_grad()
-            outputs = self.Model[i](inputs)
-            Loss = criterion(outputs, targets)
-            Loss.backward()
-            self.Optimizer[i].step()
+#         # training
+#         train_loss = 0
+#         correct = 0
+#         total = 0
+#         Loss = 0
+#         for batch_idx, (inputs, targets) in enumerate(self.trainloader):
+#             inputs, targets = inputs.to(self.device), targets.to(self.device)
+#             self.Optimizer[i].zero_grad()
+#             outputs = self.Model[i](inputs)
+#             Loss = criterion(outputs, targets)
+#             Loss.backward()
+#             self.Optimizer[i].step()
 
-            train_loss += Loss.item()
-            _, predicted = outputs.max(1)
-            total += targets.size(0)
-            correct += predicted.eq(targets).sum().item()
-        if self.device == 'cuda':
-            self.Model[i].cpu()
+#             train_loss += Loss.item()
+#             _, predicted = outputs.max(1)
+#             total += targets.size(0)
+#             correct += predicted.eq(targets).sum().item()
+#         if self.device == 'cuda':
+#             self.Model[i].cpu()
 
 
     # multiple processes to train CNN models
@@ -218,7 +217,7 @@ class cnn(nn.Module):
         
         processes = []
         for i in range(Client):
-            p = mp.Process(target=self.CNN_train, args=(i, criterion))
+            p = mp.Process(target=self.CNN_train, args=(i, criterion, self.Model[i], self.Optimizer[i], self.device, self.trainloader))
             p.start()
             processes.append(p)
         for p in processes:
