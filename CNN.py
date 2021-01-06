@@ -2,6 +2,7 @@ import os
 os.environ['CUDA_ENABLE_DEVICES'] = '0' 
 
 import torch
+torch.multiprocessing.set_start_method('spawn')
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
@@ -17,8 +18,6 @@ import pandas as pd
 import numpy as np
 from utils import progress_bar
 from models import *
-
-torch.multiprocessing.set_start_method('spawn')
 
 
 # def CNN_train(i, criterion, Model, Optimizer, device, trainloader):
