@@ -16,7 +16,7 @@ import pandas as pd
 import numpy as np
 from utils import progress_bar
 from models import *
-from multiprocessing import Pool
+from multiprocessing import Process
 
 
 
@@ -182,11 +182,11 @@ class cnn(nn.Module):
         # multi processes
         p_list = []
         for i in range(Client):
-            process = Process(target=self.CNN_train(i, criterion))
-            process.start()
-            p_list.append(process)
-        for process in p_list:
-            process.join()
+            proc = Process(target=self.CNN_train(i, criterion))
+            proc.start()
+            p_list.append(proc)
+        for proc in p_list:
+            proc.join()
         
 #         # each silo owns a complete dataset
 #         for client in range (Client):
