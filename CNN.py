@@ -164,7 +164,7 @@ class cnn(nn.Module):
             
     # CNN training process
     def CNN_train(self, i, criterion):
-        # print ('Process ', i)
+        print ('Process ', i)
         self.Model[i] = self.Model[i].to(self.device)
         
         # gpu ?
